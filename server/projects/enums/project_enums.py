@@ -1,4 +1,4 @@
-from server.users import models
+from django.db import models
 
 class ProjectType(models.TextChoices):
     GEOTERMAL = 'GEOTERMALNI', 'Geotermální vrt'
