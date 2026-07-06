@@ -22,6 +22,20 @@ services:
       context: ../client
       dockerfile: Dockerfile
 
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    depends_on:
+      - web
+      - client
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
   db:
     image: postgres:18.3-alpine
     container_name: postgres
@@ -47,3 +61,5 @@ services:
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:

@@ -16,9 +16,24 @@ services:
     ports:
       - "5173:5173"
 
+  caddy:
+    image: caddy:2-alpine
+    depends_on:
+      - web
+      - client
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
   db:
     ports:
       - "5432:5432"
 
 volumes:
   client_node_modules:
+  caddy_data:
+  caddy_config:
