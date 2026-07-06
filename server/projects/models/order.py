@@ -12,7 +12,7 @@ class Order(models.Model):
     order_type = models.CharField(
         max_length=20,
         choices=ProjectType.choices,  # Tímto Django vygeneruje select box ve formulářích
-        default=ProjectType.STUDNA,   # Výchozí hodnota
+        default=ProjectType.WELL,   # Výchozí hodnota
     )
     
     order_state = models.CharField(
