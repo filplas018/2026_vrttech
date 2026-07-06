@@ -11,6 +11,10 @@ services:
     ports:
       - "80:80"
 
+  caddy:
+    volumes:
+      - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
+
   db:
     restart: always
 
