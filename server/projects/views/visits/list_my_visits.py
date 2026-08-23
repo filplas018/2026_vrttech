@@ -1,7 +1,34 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-class ListMyVisitsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'ListMyVisitsAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+from projects.views.base_list_api_view import BaseListAPIView
+from projects.models.site_visit import SiteVisit
+from projects.serializers.site_visit_serializer import SiteVisitSerializer
+
+
+class ListMyVisitsAPIView(BaseListAPIView):
+
+    queryset = SiteVisit.objects.all()
+    serializer_class = SiteVisitSerializer
+
+    filter_fields = [
+        'order',
+        'assigned_user',
+        'planned_at',
+        'location',
+        'has_project_documentation',
+    ]
+
+    select_related = [
+        'order',
+        'assigned_user',
+    ]
+
+    ordering = [
+        'planned_at',
+    ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        return queryset.filter(
+            assigned_user=self.request.user
+        )

@@ -1,7 +1,24 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.models.document import Document
+from projects.serializers.document_serializer import DocumentSerializer
+from projects.views.base_list_api_view import BaseListAPIView
 
-class ListDocumentsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'ListDocumentsAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+class ListDocumentsAPIView(BaseListAPIView):
+
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+    filter_fields = [
+        'order',
+        'file_name',
+        'document_type',
+        'uploaded_at',
+    ]
+
+    select_related = [
+        'order',
+    ]
+
+    ordering = [
+        '-uploaded_at',
+    ]
