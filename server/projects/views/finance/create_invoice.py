@@ -1,7 +1,5 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.views.base_create_api_view import BaseCreateAPIView
+from projects.serializers.invoice_serializer import InvoiceSerializer
 
-class CreateInvoiceAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({'message': 'CreateInvoiceAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+class CreateInvoiceAPIView(BaseCreateAPIView):
+    serializer_class=InvoiceSerializer

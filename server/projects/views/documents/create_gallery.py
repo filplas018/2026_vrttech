@@ -1,7 +1,5 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.serializers.photo_gallery_serializer import PhotoGallerySerializer
+from projects.views.base_create_api_view import BaseCreateAPIView
 
-class CreateGalleryAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({'message': 'CreateGalleryAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+class CreateGalleryAPIView(BaseCreateAPIView):
+    serializer_class = PhotoGallerySerializer

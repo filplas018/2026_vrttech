@@ -71,17 +71,17 @@ from projects.views.finance.release_retention import ReleaseRetentionAPIView
 
 urlpatterns = [
     # === 1. PROJECTS ===
-    path('projects/', route_by_method(get_view=ListProjectsAPIView, post_view=CreateProjectAPIView), name='projects-root'),
+    path('projects/', route_by_method(get_view=ListProjectsAPIView, post_view=CreateProjectAPIView), name='projects-root'), #✔
     path('projects/<int:pk>/', route_by_method(get_view=GetProjectAPIView, patch_view=UpdateProjectAPIView), name='projects-detail'),
     path('projects/<int:pk>/assign-contact/', AssignContactAPIView.as_view(), name='projects-assign-contact'),
 
     # === 2. SITE VISITS ===
     path('site-visits/', route_by_method(post_view=CreateVisitAPIView), name='visits-root'),
-    path('site-visits/my-visits/', ListMyVisitsAPIView.as_view(), name='visits-my-visits'),
+    path('site-visits/my-visits/', ListMyVisitsAPIView.as_view(), name='visits-my-visits'),#✔
     path('site-visits/<int:pk>/conditions/', route_by_method(get_view=GetConditionsAPIView, post_view=CreateConditionsAPIView), name='visits-conditions'),
 
     # === 3. DRILLING ===
-    path('drilling-rigs/', ListRigsAPIView.as_view(), name='drilling-rigs'),
+    path('drilling-rigs/', ListRigsAPIView.as_view(), name='drilling-rigs'),#✔ In wish you where students did next charity. Yes, you've done nyms problemows. So I should
     path('drilling-schedule/', route_by_method(get_view=ListScheduleAPIView, post_view=CreateScheduleAPIView), name='drilling-schedule'),
     path('drilling-schedule/<int:pk>/', route_by_method(patch_view=UpdateScheduleAPIView), name='drilling-schedule-detail'),
     path('projects/<int:pk>/technical-report/', route_by_method(get_view=GetTechnicalReportAPIView, post_view=CreateTechnicalReportAPIView), name='projects-technical-report'),
@@ -89,7 +89,7 @@ urlpatterns = [
     path('projects/<int:pk>/well-workflow/<int:step_number>/', route_by_method(patch_view=UpdateWellWorkflowStepAPIView), name='projects-well-workflow-step'),
 
     # === 4. DOCUMENTS & GALLERIES ===
-    path('projects/<int:pk>/documents/', route_by_method(get_view=ListDocumentsAPIView, post_view=UploadDocumentAPIView), name='projects-documents'),
+    path('projects/<int:pk>/documents/', route_by_method(get_view=ListDocumentsAPIView, post_view=UploadDocumentAPIView), name='projects-documents'),#✔
     path('projects/<int:pk>/galleries/', route_by_method(post_view=CreateGalleryAPIView), name='projects-galleries'),
     path('galleries/<int:gallery_id>/photos/', route_by_method(post_view=UploadPhotoAPIView), name='gallery-photos'),
 
