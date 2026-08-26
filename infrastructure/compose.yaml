@@ -7,6 +7,9 @@ services:
     build:
       context: ../server
       dockerfile: Dockerfile
+      target: development  # Explicitně řekne Dockeru, že má použít dev fázi
+    volumes:
+      - ../server:/app     # Propojí lokální kódy s kontejnerem
     env_file:
       - .env
     depends_on:
@@ -39,6 +42,8 @@ services:
   db:
     image: postgres:18.3-alpine
     container_name: postgres
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

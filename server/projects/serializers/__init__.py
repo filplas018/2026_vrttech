@@ -12,7 +12,7 @@ from .photo_serializer import PhotoSerializer
 from .retention_serializer import RetentionSerializer
 from .site_visit_serializer import SiteVisitSerializer
 from .technical_report_serializer import TechnicalReportSerializer
-from .well_workflow_steps_serializer import WellWorkflowStepsSerializer
+from .well_workflow_steps_serializer import WellWorkflowStepSerializer
 
 __all__ = [
     'ProjectSerializer',
@@ -29,5 +29,5 @@ __all__ = [
     'RetentionSerializer',
     'SiteVisitSerializer',
     'TechnicalReportSerializer',
-    'WellWorkflowStepsSerializer',
+    'WellWorkflowStepSerializer',
 ]
