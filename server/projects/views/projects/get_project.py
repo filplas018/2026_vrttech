@@ -6,8 +6,3 @@ from projects.views.base_get_api_view import BaseGetAPIView
 class GetProjectAPIView(BaseGetAPIView):
     queryset = Order.objects.all()
     serializer_class = ProjectSerializer
-
-    # Volitelně si můžeš přizpůsobit načítání relací pro optimalizaci SQL dotazů
-    select_related = [
-        'client',
-    ]

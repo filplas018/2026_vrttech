@@ -24,6 +24,10 @@ services:
     build:
       context: ../client
       dockerfile: Dockerfile
+      target: development
+    volumes:
+      - ../client:/app
+      - client_node_modules:/app/node_modules
 
   caddy:
     image: caddy:2-alpine
@@ -66,5 +70,6 @@ services:
 
 volumes:
   postgres_data:
+  client_node_modules:
   caddy_data:
   caddy_config:

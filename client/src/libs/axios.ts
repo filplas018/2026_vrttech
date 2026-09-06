@@ -5,9 +5,31 @@ export const IS_LOGGED_IN_FLAG_KEY = 'IS_LOGGED_IN';
 export const apiClient = axios.create({
   baseURL: '/api/v1',
   withCredentials: true,
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+let csrfRequest: Promise<unknown> | null = null;
+
+apiClient.interceptors.request.use(async (config) => {
+  const isUnsafeMethod = !['get', 'head', 'options'].includes(
+    (config.method ?? 'get').toLowerCase(),
+  );
+  const hasCsrfCookie = document.cookie
+    .split('; ')
+    .some((cookie) => cookie.startsWith('csrftoken='));
+
+  if (isUnsafeMethod && !hasCsrfCookie) {
+    csrfRequest ??= apiClient.get('/auth/csrf/').finally(() => {
+      csrfRequest = null;
+    });
+    await csrfRequest;
+  }
+
+  return config;
 });
 
 // -----------------------------------------------------------------
@@ -36,13 +58,7 @@ apiClient.interceptors.response.use(
         // Call the refresh endpoint to get a new access token.
         // The browser will automatically send the 'refresh_token' cookie.
         // Backend will respond by setting a new 'access_token' cookie.
-        await axios.post(
-          '/api/v1/auth/token/refresh/',
-          {},
-          {
-            withCredentials: true, // Ensure cookies are sent with this request
-          },
-        );
+        await apiClient.post('/auth/token/refresh/', {});
 
         // Now retry the original request.
         // The browser will automatically attach the newly minted access_token cookie.

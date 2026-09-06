@@ -34,9 +34,12 @@ from projects.views.projects.create_project import CreateProjectAPIView
 from projects.views.projects.get_project import GetProjectAPIView
 from projects.views.projects.update_project import UpdateProjectAPIView
 from projects.views.projects.assign_contact import AssignContactAPIView
+from projects.views.projects.list_project_contacts import ListProjectContactsAPIView
+
 
 # 2. Visits
 from projects.views.visits.list_my_visits import ListMyVisitsAPIView
+from projects.views.visits.list_visits import ListVisitsAPIView
 from projects.views.visits.create_visit import CreateVisitAPIView
 from projects.views.visits.get_conditions import GetConditionsAPIView
 from projects.views.visits.create_conditions import CreateConditionsAPIView
@@ -65,6 +68,11 @@ from projects.views.finance.create_protocol import CreateProtocolAPIView
 from projects.views.finance.sign_protocol import SignProtocolAPIView
 from projects.views.finance.send_protocol import SendProtocolAPIView
 from projects.views.finance.release_retention import ReleaseRetentionAPIView
+# 6. Users & lookups
+from projects.views.lookups.list_all_users import ListAllUsersAPIView
+from projects.views.lookups.list_all_contacts import ListAllContactsAPIView
+from projects.views.lookups.list_all_galleries import ListAllGalleriesAPIView
+
 
 
 # --- URLPATTERNS MAPPING ---
@@ -74,10 +82,12 @@ urlpatterns = [
     path('projects/', route_by_method(get_view=ListProjectsAPIView, post_view=CreateProjectAPIView), name='projects-root'), #✔
     path('projects/<int:pk>/', route_by_method(get_view=GetProjectAPIView, patch_view=UpdateProjectAPIView), name='projects-detail'),
     path('projects/<int:pk>/assign-contact/', AssignContactAPIView.as_view(), name='projects-assign-contact'),
+    path('projects/<int:pk>/contacts/', ListProjectContactsAPIView.as_view(), name='projects-contacts'),
 
     # === 2. SITE VISITS ===
     path('site-visits/', route_by_method(post_view=CreateVisitAPIView), name='visits-root'),
     path('site-visits/my-visits/', ListMyVisitsAPIView.as_view(), name='visits-my-visits'),#✔
+    path('site-visits/<int:pk>/', ListVisitsAPIView.as_view(), name='visits-visits'),#✔
     path('site-visits/<int:pk>/conditions/', route_by_method(get_view=GetConditionsAPIView, post_view=CreateConditionsAPIView), name='visits-conditions'),
 
     # === 3. DRILLING ===
@@ -90,7 +100,10 @@ urlpatterns = [
 
     # === 4. DOCUMENTS & GALLERIES ===
     path('projects/<int:pk>/documents/', route_by_method(get_view=ListDocumentsAPIView, post_view=UploadDocumentAPIView), name='projects-documents'),#✔
-    path('projects/<int:pk>/galleries/', route_by_method(post_view=CreateGalleryAPIView), name='projects-galleries'),
+    path('projects/<int:pk>/galleries/', route_by_method(
+        get_view=ListAllGalleriesAPIView, 
+        post_view=CreateGalleryAPIView
+    ), name='projects-galleries'),#✔
     path('galleries/<int:gallery_id>/photos/', route_by_method(post_view=UploadPhotoAPIView), name='gallery-photos'),
 
     # === 5. FINANCE & PROTOCOLS ===
@@ -100,5 +113,13 @@ urlpatterns = [
     path('projects/<int:pk>/inspection-protocols/', route_by_method(post_view=CreateProtocolAPIView), name='projects-protocols'),
     path('inspection-protocols/<int:pk>/sign/', SignProtocolAPIView.as_view(), name='protocol-sign'),
     path('inspection-protocols/<int:pk>/send/', SendProtocolAPIView.as_view(), name='protocol-send'),
-    path('retentions/<int:pk>/release/', ReleaseRetentionAPIView.as_view(), name='retention-release'),
+    path('retentions/<int:pk>/release/', route_by_method(patch_view=ReleaseRetentionAPIView), name='retention-release'),
+
+    # === 6 USERS LOOKUPS
+    path('all-users/', ListAllUsersAPIView.as_view(), name='users-list'),
+    path('all-contacts/', ListAllContactsAPIView.as_view(), name='contacts-list'),
+    # path('projects/<int:pk>/galleries/', route_by_method(
+    #     get_view=ListAllGalleriesAPIView, 
+    #     post_view=CreateGalleryAPIView
+    # ), name='projects-galleries'),
 ]
