@@ -21,6 +21,8 @@ export const router = createBrowserRouter([
           {
             path: '',
             element: <ProjectsPage />,
+                      handle: { title: 'Vítejte na VRT domovské stránce' },
+
           },
           {
             path: 'projects',
@@ -38,6 +40,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
   // Auth routes
   {
     element: <AuthLayout />,

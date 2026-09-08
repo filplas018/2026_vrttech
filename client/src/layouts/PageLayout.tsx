@@ -9,7 +9,7 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Link, Outlet } from 'react-router';
+import { Link, Outlet, useMatches, NavLink } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
 import { useState } from 'react';
@@ -19,12 +19,18 @@ import { useMe } from '@/features/users/hooks';
 import logo_small from '../components/assets/vrt_logo_small.png';
 import logo_text from '../components/assets/vrt_logo_text.png';
 
+
+
 export const PageLayout = () => {
   const { data: user } = useMe();
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
   const logoutMutation = useLogoutMutation();
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  //nadpis
+  const matches = useMatches();
+  const currentTitle = (matches.at(-1)?.handle as { title?: string } | undefined)?.title ?? 'VRT-TECH';
 
   function handleLogout() {
     logoutMutation.mutate(undefined, {
@@ -72,34 +78,53 @@ export const PageLayout = () => {
         <nav>
           <ul className='flex flex-col gap-1'>
             <li>
-              <Link
+              <NavLink
                 to='/projects'
-                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+                end
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md ${
+                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
+                  }`
+                }
               >
                 <ChartBarStacked />
                 Přehled
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to='/projects?orderType=VRTANA_STUDNA'
-                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md ${
+                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
+                  }`
+                }
               >
                 <WavesArrowDown />
                 Vrtané studny
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to='/projects?orderType=GEOTERMALNI'
-                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md ${
+                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
+                  }`
+                }
               >
                 <ZodiacAquarius />
                 Geotermální vrty
-              </Link>
-              <Link
+              </NavLink>
+             
+              <NavLink
                 to='/users/settings'
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md ${
+                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
+                  }`
+                }
                 className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
               >
                 <UsersRound />
                 Uživatelé
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>
@@ -126,7 +151,12 @@ export const PageLayout = () => {
         </div>
       </div>
 
-      <div className='h-full overflow-auto flex-1 flex flex-col relative'>
+      
+
+      <div className='h-full overflow-auto flex-1 flex flex-col relative bg-linear-to-br from-white via-orange-50 to-sky-50'>
+        <header className='border-b-2 mx-2 px-6 py-4 text-brand shrink-0 bg-white/80'>
+          <h1 className='text-2xl font-bold'>{currentTitle}</h1>
+        </header>
         <Outlet />
       </div>
 

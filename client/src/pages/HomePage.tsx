@@ -1,9 +1,7 @@
 export const HomePage = () => {
   return (
     <main className="flex min-h-full w-full flex-1 flex-col  text-slate-900">
-      <header className="border-b-2 mx-2 px-6 py-4 text-brand">
-        <h1 className="text-2xl font-bold">Vítejte na VRT domovské stránce</h1>
-      </header>
+      
 
       <section className="mx-auto flex flex-1 w-full px-4 py-12 lg:px-6 bg-linear-to-br from-white via-orange-50 to-sky-50">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
