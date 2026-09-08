@@ -23,7 +23,7 @@ export const useLoginMutation = () => {
       // Invalidate the 'users/me' query to refetch user data after login
       queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
       // Navigate to the user's profile page after successful login
-      navigate('/my-profile');
+      navigate('/projects');
     },
   });
 };

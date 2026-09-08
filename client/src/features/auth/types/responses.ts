@@ -5,6 +5,6 @@ export interface LoginResponse {
 export interface RegisterResponse {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }

@@ -1,27 +1,44 @@
 import { createBrowserRouter, Navigate } from 'react-router';
-import { LoginPage, RegisterPage } from '@/pages';
+import {
+  LoginPage,
+  ProjectDetailPage,
+  ProjectsPage,
+  RegisterPage,
+  UsersSettingsPage,
+} from '@/pages';
 import { AuthLayout, PageLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
-import { HomePage } from '@/pages/HomePage';
 
 export const router = createBrowserRouter([
   // Protected routes
   {
-  element: <ProtectedRoute />,
-  children: [
-    {
-      path: '/',
-      element: <PageLayout />,
-      children: [
-        {
-          path: '',
-          element: <HomePage />,
-          handle: { title: 'Vítejte na VRT domovské stránce' },
-        },
-       
-      ],
-    },
-  ],
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/',
+        element: <PageLayout />,
+        children: [
+          {
+            path: '',
+            element: <ProjectsPage />,
+                      handle: { title: 'Vítejte na VRT domovské stránce' },
+
+          },
+          {
+            path: 'projects',
+            element: <ProjectsPage />,
+          },
+          {
+            path: 'projects/:id',
+            element: <ProjectDetailPage />,
+          },
+          {
+            path: 'users/settings',
+            element: <UsersSettingsPage />,
+          },
+        ],
+      },
+    ],
   },
 
   // Auth routes
@@ -38,9 +55,9 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Catch-all route to redirect to /chats
+  // Catch-all route to the project overview
   {
     path: '*',
-    element: <Navigate to='/chats' replace />,
+    element: <Navigate to='/projects' replace />,
   },
 ]);

@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router';
 import { handleFormErrors } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
@@ -21,8 +20,6 @@ export const RegisterForm = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  useEffect(() => console.log('RegisterForm errors:', errors), [errors]);
-
   const onSubmit = (data: RegisterPayload) => {
     clearErrors('root');
 
@@ -32,7 +29,11 @@ export const RegisterForm = () => {
         toast.success('Registration successful! Please log in.');
       },
       onError: (error) => {
-        handleFormErrors<RegisterPayload>(error, setError);
+        handleFormErrors<RegisterPayload>(error, setError, 'root', {
+          first_name: 'firstName',
+          last_name: 'lastName',
+          confirm_password: 'confirmPassword',
+        });
       },
     });
   };
@@ -47,13 +48,13 @@ export const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} onChange={onChange} className='space-y-4'>
       <Input
-        label='First Name'
+        label='Jméno'
         error={errors.firstName?.message}
         autoComplete='given-name'
         {...register('firstName')}
       />
       <Input
-        label='Last Name'
+        label='Příjmení'
         error={errors.lastName?.message}
         autoComplete='family-name'
         {...register('lastName')}
@@ -66,14 +67,14 @@ export const RegisterForm = () => {
         {...register('email')}
       />
       <Input
-        label='Password'
+        label='Heslo'
         type='password'
         error={errors.password?.message}
         autoComplete='new-password'
         {...register('password')}
       />
       <Input
-        label='Confirm Password'
+        label='Potvrzení hesla'
         type='password'
         error={errors.confirmPassword?.message}
         autoComplete='new-password'
@@ -88,7 +89,7 @@ export const RegisterForm = () => {
         isLoading={registerMutation.isPending}
         className='w-full'
       >
-        {registerMutation.isPending ? 'Registering...' : 'Register'}
+        {registerMutation.isPending ? 'Registruji...' : 'Registrovat'}
       </Button>
     </form>
   );

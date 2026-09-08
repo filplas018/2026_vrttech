@@ -1,7 +1,8 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.models import Invoice
+from projects.serializers import InvoiceSerializer
+from projects.views.base_patch_api_view import BasePatchAPIView
 
-class UpdateInvoiceStatusAPIView(APIView):
-    def patch(self, request, *args, **kwargs):
-        return Response({'message': 'UpdateInvoiceStatusAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+class UpdateInvoiceStatusAPIView(BasePatchAPIView):
+    model = Invoice
+    serializer_class = InvoiceSerializer

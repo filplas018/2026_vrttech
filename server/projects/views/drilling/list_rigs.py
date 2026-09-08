@@ -1,7 +1,19 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.views.base_list_api_view import BaseListAPIView
 
-class ListRigsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'ListRigsAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+from projects.models.drilling_rig import DrillingRig
+from projects.serializers.drilling_rig_serializer import DrillingRigSerializer
+
+
+class ListRigsAPIView(BaseListAPIView):
+
+    queryset = DrillingRig.objects.all()
+    serializer_class = DrillingRigSerializer
+
+    filter_fields = [
+        'name',
+        'registration',
+    ]
+
+    ordering = [
+        'name',
+    ]

@@ -4,9 +4,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import generics, serializers
 from rest_framework.exceptions import ErrorDetail
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import BasePermission
 
 User = get_user_model()
+
+
+class IsSuperuser(BasePermission):
+    """Allow access only to authenticated superusers."""
+
+    def has_permission(self, request, view):
+        """Return whether the requesting user is a superuser."""
+        return bool(request.user and request.user.is_superuser)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -59,5 +67,4 @@ class UserRegistrationApiView(generics.CreateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
-    authentication_classes = ()
-    permission_classes = (AllowAny,)
+    permission_classes = (IsSuperuser,)

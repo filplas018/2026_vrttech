@@ -1,12 +1,20 @@
-import { Button, Input } from '@/components';
-import { Bell, Loader, LogOut, Menu, WavesArrowDown, ZodiacAquarius, Search, ChartBarStacked } from 'lucide-react';
+import { Button } from '@/components';
+import {
+  LogOut,
+  WavesArrowDown,
+  ZodiacAquarius,
+  Search,
+  ChartBarStacked,
+  ChevronLeft,
+  UsersRound,
+} from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Link, Outlet, useMatches, NavLink } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
 import { useState } from 'react';
 import { ProfileSheet } from '@/features/users/components';
-import { toast } from 'sonner'  ;
+import { toast } from 'sonner';
 import { useMe } from '@/features/users/hooks';
 import logo_small from '../components/assets/vrt_logo_small.png';
 import logo_text from '../components/assets/vrt_logo_text.png';
@@ -18,13 +26,13 @@ export const PageLayout = () => {
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
   const logoutMutation = useLogoutMutation();
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   //nadpis
   const matches = useMatches();
   const currentTitle = (matches.at(-1)?.handle as { title?: string } | undefined)?.title ?? 'VRT-TECH';
 
-  function handleLogout(e: Event) {
-    e.preventDefault();
+  function handleLogout() {
     logoutMutation.mutate(undefined, {
       onSuccess: () => {
         toast.success('Logged out successfully');
@@ -36,29 +44,42 @@ export const PageLayout = () => {
     setProfileSheetOpen(true);
   }
 
+
+
   return (
     <div className='h-screen overflow-hidden flex'>
-      <div className='h-full w-80 md:w-96 flex flex-col gap-2 p-2 border-r'>
+      <div
+        className={`transition-all duration-300 h-full flex flex-col gap-2 p-2 border-r ${isOpen ? 'w-16' : ' w-64 md:w-72'}`}
+      >
         <div className='flex items-center gap-2 pb-2 border-b-2'>
-            <img src={logo_small} alt='VRT Logo' className='h-12 w-auto' />
-            <img src={logo_text} alt='VRT Logo' className='h-6 w-auto' />
-          </div>
+          <img src={logo_small} alt='VRT Logo' className='h-12 w-auto' />
+          <img src={logo_text} alt='VRT Logo' className='h-6 w-auto' />
+        </div>
+        {/* <Button
+            variant='primary'
+            size='icon'
+            onClick={() => setIsOpen(!isOpen)}
+            className='border border-brand-secondary text-border-secondary'
+            disabled={logoutMutation.isPending}
+            aria-label='Logout'
+          >
+          <ChevronLeft className={`${isOpen ? 'rotate-180' : ''} transition-transform duration-300`} />
+          </Button> */}
         <div className='flex gap-2'>
-          
-          <InputGroup>
+          {/* <InputGroup>
             <InputGroupInput placeholder='Search...' name='search' />
             <InputGroupAddon>
               <Search />
             </InputGroupAddon>
             <InputGroupAddon align='inline-end'>12 results</InputGroupAddon>
-          </InputGroup>
+          </InputGroup> */}
         </div>
 
         <nav>
           <ul className='flex flex-col gap-1'>
             <li>
               <NavLink
-                to=''
+                to='/projects'
                 end
                 className={({ isActive }) =>
                   `flex items-center gap-2 p-2 rounded-md ${
@@ -70,7 +91,7 @@ export const PageLayout = () => {
                 Přehled
               </NavLink>
               <NavLink
-                to='projects'
+                to='/projects?orderType=VRTANA_STUDNA'
                 className={({ isActive }) =>
                   `flex items-center gap-2 p-2 rounded-md ${
                     isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
@@ -81,7 +102,7 @@ export const PageLayout = () => {
                 Vrtané studny
               </NavLink>
               <NavLink
-                to='projects'
+                to='/projects?orderType=GEOTERMALNI'
                 className={({ isActive }) =>
                   `flex items-center gap-2 p-2 rounded-md ${
                     isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
@@ -91,14 +112,27 @@ export const PageLayout = () => {
                 <ZodiacAquarius />
                 Geotermální vrty
               </NavLink>
+             
+              <NavLink
+                to='/users/settings'
+                className={({ isActive }) =>
+                  `flex items-center gap-2 p-2 rounded-md ${
+                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
+                  }`
+                }
+                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+              >
+                <UsersRound />
+                Uživatelé
+              </NavLink>
             </li>
           </ul>
         </nav>
 
         <div className='mt-auto flex items-center justify-between gap-3 rounded-xl border-2 border-brand-secondary p-3'>
-          <Button variant='ghost'  onClick={handleOpenProfileSheet} size='sm'>
+          <Button variant='ghost' onClick={handleOpenProfileSheet} size='sm'>
             <div className='truncate text-lg font-semibold text-slate-900 flex gap-2'>
-                <span>{user?.statusEmoji || '😎'}</span>
+              <span>{user?.statusEmoji || '😎'}</span>
               {fullName || 'Přihlášený uživatel'}
             </div>
           </Button>
@@ -110,7 +144,9 @@ export const PageLayout = () => {
             disabled={logoutMutation.isPending}
             aria-label='Logout'
           >
-            <LogOut className={`${logoutMutation.isPending ? 'animate-spin' : undefined} text-white`} />
+            <LogOut
+              className={`${logoutMutation.isPending ? 'animate-spin' : undefined} text-white`}
+            />
           </Button>
         </div>
       </div>
