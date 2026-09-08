@@ -1,7 +1,22 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.http import Http404
 
-class GetTechnicalReportAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'GetTechnicalReportAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+from projects.models import TechnicalReport
+from projects.serializers.technical_report_serializer import TechnicalReportSerializer
+from projects.views.base_get_api_view import BaseGetAPIView
+
+
+class GetTechnicalReportAPIView(BaseGetAPIView):
+    queryset = TechnicalReport.objects.all()
+    serializer_class = TechnicalReportSerializer
+
+    # Optimalizace načtení údajů o vrtmistrovi (User model)
+    select_related = [
+        'driller',
+    ]
+
+    def get_object(self):
+        order_id = self.kwargs.get('pk')
+        report = self.get_queryset().filter(order_id=order_id).order_by('-filled_at', '-id').first()
+        if report is None:
+            raise Http404
+        return report

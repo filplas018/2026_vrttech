@@ -1,7 +1,16 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.shortcuts import get_object_or_404
 
-class CreateConditionsAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({'message': 'CreateConditionsAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+from projects.models import SiteVisit
+from projects.serializers.checklist_serializer import ChecklistSerializer
+from projects.views.base_create_api_view import BaseCreateAPIView
+
+
+class CreateConditionsAPIView(BaseCreateAPIView):
+    serializer_class = ChecklistSerializer
+
+    def perform_create(self, serializer):
+        site_visit_id = self.kwargs.get('pk')
+        site_visit = get_object_or_404(SiteVisit, pk=site_visit_id)
+        
+        # serializer.save() vytvoří a vrátí instanci Checklist svázanou se SiteVisit
+        return serializer.save(site_visit=site_visit)

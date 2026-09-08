@@ -23,6 +23,8 @@ FROM base AS development
 
 # Install all dependencies
 RUN uv sync
+# Nakopírování zdrojových kódů do dev fáze
+COPY . .
 
 EXPOSE 8000
 

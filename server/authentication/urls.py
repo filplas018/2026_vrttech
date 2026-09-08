@@ -5,6 +5,7 @@ from django.urls import path
 from authentication import apis
 
 urlpatterns = [
+    path("csrf/", apis.CsrfTokenApiView.as_view(), name="csrf_token"),
     path(
         "token/",
         apis.CookieTokenObtainPairApiView.as_view(),

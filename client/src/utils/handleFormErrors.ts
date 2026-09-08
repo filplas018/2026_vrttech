@@ -6,6 +6,7 @@ export const handleFormErrors = <T extends FieldValues>(
   error: unknown,
   setError: UseFormSetError<T>,
   fallbackField: 'root' | Path<T> = 'root',
+  fieldMap: Partial<Record<string, Path<T>>> = {},
 ) => {
   const apiError = extractApiError(error);
 
@@ -23,7 +24,8 @@ export const handleFormErrors = <T extends FieldValues>(
 
   // Handle Field-Specific Validation Errors
   if (apiError.details) {
-    Object.entries(apiError.details).forEach(([field, fieldErrors]) => {
+    Object.keys(apiError.details).forEach((field) => {
+      const fieldErrors = apiError.details?.[field];
       // Safely grab the first error object in the array
       const firstError = fieldErrors[0];
 
@@ -34,7 +36,7 @@ export const handleFormErrors = <T extends FieldValues>(
           ErrorTranslations.general[firstError.code] || // 2. Generic fallback (general.unique)
           firstError.message; // 3. Backend fallback string
 
-        setError(field as Path<T>, {
+        setError(fieldMap[field] || (field as Path<T>), {
           type: 'server',
           message: localizedMessage,
         });

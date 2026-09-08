@@ -1,8 +1,13 @@
 import { createBrowserRouter, Navigate } from 'react-router';
-import { LoginPage, RegisterPage } from '@/pages';
+import {
+  LoginPage,
+  ProjectDetailPage,
+  ProjectsPage,
+  RegisterPage,
+  UsersSettingsPage,
+} from '@/pages';
 import { AuthLayout, PageLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
-import { HomePage } from '@/pages/HomePage';
 
 export const router = createBrowserRouter([
   // Protected routes
@@ -15,7 +20,19 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '',
-            element: <HomePage />,
+            element: <ProjectsPage />,
+          },
+          {
+            path: 'projects',
+            element: <ProjectsPage />,
+          },
+          {
+            path: 'projects/:id',
+            element: <ProjectDetailPage />,
+          },
+          {
+            path: 'users/settings',
+            element: <UsersSettingsPage />,
           },
         ],
       },
@@ -35,9 +52,9 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  // Catch-all route to redirect to /chats
+  // Catch-all route to the project overview
   {
     path: '*',
-    element: <Navigate to='/chats' replace />,
+    element: <Navigate to='/projects' replace />,
   },
 ]);

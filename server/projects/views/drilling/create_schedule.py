@@ -1,7 +1,6 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.views.base_create_api_view import BaseCreateAPIView
+from projects.serializers.drilling_schedule_serializer import DrillingRigScheduleSerializer
 
-class CreateScheduleAPIView(APIView):
-    def post(self, request, *args, **kwargs):
-        return Response({'message': 'CreateScheduleAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+class CreateScheduleAPIView(BaseCreateAPIView):
+    serializer_class=DrillingRigScheduleSerializer
+    

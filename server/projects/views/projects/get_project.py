@@ -1,7 +1,8 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from projects.models.order import Order
+from projects.serializers.project_serializer import ProjectSerializer
+from projects.views.base_get_api_view import BaseGetAPIView
 
-class GetProjectAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'GetProjectAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+
+class GetProjectAPIView(BaseGetAPIView):
+    queryset = Order.objects.all()
+    serializer_class = ProjectSerializer

@@ -1,7 +1,15 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.shortcuts import get_object_or_404
 
-class GetConditionsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        return Response({'message': 'GetConditionsAPIView ještě není naimplementován.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
+from projects.models import Checklist
+from projects.serializers.checklist_serializer import ChecklistSerializer
+from projects.views.base_get_api_view import BaseGetAPIView
+
+
+class GetConditionsAPIView(BaseGetAPIView):
+    queryset = Checklist.objects.all()
+    serializer_class = ChecklistSerializer
+
+    def get_object(self):
+        site_visit_id = self.kwargs.get('pk')
+        # Najde checklist podle ID terénní návštěvy z URL (případně vrátí 404)
+        return get_object_or_404(self.get_queryset(), site_visit_id=site_visit_id)
