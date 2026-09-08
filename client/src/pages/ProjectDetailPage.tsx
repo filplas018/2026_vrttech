@@ -1,11 +1,15 @@
-import { ArrowLeft, CalendarDays, Check, FileText, WalletCards } from 'lucide-react';
-import { Link, useParams } from 'react-router';
+import { CalendarDays, Check, FileText, Save, WalletCards } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Select } from '../components/ui/select';
 import {
   useFinanceOverview,
   useProject,
   useProjectDocuments,
+  useUpdateProjectMutation,
   useWellWorkflow,
 } from '../features/projects/hooks';
 import {
@@ -13,6 +17,7 @@ import {
   projectTypeLabels,
   customerInterestLabels,
 } from '../features/projects/types';
+import type { UpdateProjectPayload } from '../features/projects/types';
 import { OperationsPanel, Metric, InfoTile, ProjectHeader } from '../features/projects/components';
 import { apiClient } from '../libs';
 import { toast } from 'sonner';
@@ -28,8 +33,6 @@ const workflowLabels = [
   'Projekt vodního díla',
   'Dokončení úřadů',
 ];
-type RecordValue = Record<string, unknown>;
-
 
 export const ProjectDetailPage = () => {
   const { id } = useParams();
@@ -40,6 +43,23 @@ export const ProjectDetailPage = () => {
   const { data: documents = [] } = useProjectDocuments(projectId);
   const { data: finance } = useFinanceOverview(projectId);
   const field = (value: unknown) => (value == null ? '-' : String(value));
+  const updateProjectMutation = useUpdateProjectMutation();
+  const [form, setForm] = useState<UpdateProjectPayload>();
+
+  useEffect(() => {
+    if (project) {
+      setForm({
+        orderNumber: project.orderNumber,
+        name: project.name,
+        orderType: project.orderType,
+        orderState: project.orderState,
+        customerInterest: project.customerInterest,
+        totalBudget: project.totalBudget,
+        warrantyFrom: project.warrantyFrom,
+        warrantyTo: project.warrantyTo,
+      });
+    }
+  }, [project]);
 
 
   const mutation = useMutation({
@@ -59,16 +79,120 @@ export const ProjectDetailPage = () => {
       error: 'Operace se nepodařila.',
     });
 
+  const updateField = (field: keyof UpdateProjectPayload, value: string) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const saveProject = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!form) return;
+
+    toast.promise(updateProjectMutation.mutateAsync({ projectId, payload: form }), {
+      loading: 'Ukládám údaje zakázky...',
+      success: 'Údaje zakázky byly uloženy.',
+      error: 'Údaje zakázky se nepodařilo uložit.',
+    });
+  };
+
   if (isLoading)
     return <main className='p-8 text-sm text-muted-foreground'>Načítám detail zakázky...</main>;
   if (!project)
     return <main className='p-8 text-sm text-destructive'>Zakázku se nepodařilo načíst.</main>;
+  if (!form) return null;
 
   const summary = finance?.summary;
 
   return (
     <>
       <ProjectHeader project={project} />
+
+      <form onSubmit={saveProject} className='mx-4 mb-2 rounded-xl border border-slate-200 bg-white p-4'>
+        <div className='mb-4 flex items-center justify-between gap-3'>
+          <h2 className='text-lg font-semibold text-slate-950'>Údaje zakázky</h2>
+          <Button type='submit' disabled={updateProjectMutation.isPending}>
+            <Save className='size-4' />
+            {updateProjectMutation.isPending ? 'Ukládám...' : 'Uložit změny'}
+          </Button>
+        </div>
+        <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
+          <label className='space-y-2 text-sm font-medium'>
+            Číslo zakázky
+            <Input
+              required
+              value={form.orderNumber ?? ''}
+              onChange={(event) => updateField('orderNumber', event.target.value)}
+            />
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Název zakázky
+            <Input
+              required
+              value={form.name ?? ''}
+              onChange={(event) => updateField('name', event.target.value)}
+            />
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Typ zakázky
+            <Select
+              value={form.orderType ?? ''}
+              onChange={(event) => updateField('orderType', event.target.value)}
+            >
+              {Object.entries(projectTypeLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </Select>
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Stav zakázky
+            <Select
+              value={form.orderState ?? ''}
+              onChange={(event) => updateField('orderState', event.target.value)}
+            >
+              {Object.entries(projectStateLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </Select>
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Zájem zákazníka
+            <Select
+              value={form.customerInterest ?? ''}
+              onChange={(event) => updateField('customerInterest', event.target.value)}
+            >
+              {Object.entries(customerInterestLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </Select>
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Celkový rozpočet
+            <Input
+              required
+              type='number'
+              min='0'
+              step='0.01'
+              value={form.totalBudget ?? ''}
+              onChange={(event) => updateField('totalBudget', event.target.value)}
+            />
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Záruka od
+            <Input
+              type='date'
+              value={form.warrantyFrom ?? ''}
+              onChange={(event) => updateField('warrantyFrom', event.target.value)}
+            />
+          </label>
+          <label className='space-y-2 text-sm font-medium'>
+            Záruka do
+            <Input
+              type='date'
+              value={form.warrantyTo ?? ''}
+              onChange={(event) => updateField('warrantyTo', event.target.value)}
+            />
+          </label>
+        </div>
+      </form>
 
       <main className='grid gap-2 xl:grid-cols-3 bg-slate-50/70 pt-0 p-4'>
         <div className='rounded-xl border border-slate-200 bg-white p-4 col-span-3 xl:col-span-2'>

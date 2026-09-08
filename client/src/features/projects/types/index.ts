@@ -57,5 +57,15 @@ export interface CreateProjectPayload {
 }
 
 export type UpdateProjectPayload = Partial<
-  Pick<Project, 'name' | 'orderState' | 'customerInterest' | 'totalBudget' | 'warrantyFrom' | 'warrantyTo'>
+  Pick<
+    Project,
+    | 'orderNumber'
+    | 'name'
+    | 'orderType'
+    | 'orderState'
+    | 'customerInterest'
+    | 'totalBudget'
+    | 'warrantyFrom'
+    | 'warrantyTo'
+  >
 >;

@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.http import Http404
 
 from projects.models import TechnicalReport
 from projects.serializers.technical_report_serializer import TechnicalReportSerializer
@@ -16,5 +16,7 @@ class GetTechnicalReportAPIView(BaseGetAPIView):
 
     def get_object(self):
         order_id = self.kwargs.get('pk')
-        # Vyhledá technickou zprávu svázanou se zakázkou z URL (případně vrátí 404)
-        return get_object_or_404(self.get_queryset(), order_id=order_id)
+        report = self.get_queryset().filter(order_id=order_id).order_by('-filled_at', '-id').first()
+        if report is None:
+            raise Http404
+        return report

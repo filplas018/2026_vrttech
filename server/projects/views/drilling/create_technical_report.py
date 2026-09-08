@@ -12,8 +12,4 @@ class CreateTechnicalReportAPIView(BaseCreateAPIView):
         order_id = self.kwargs.get('pk')
         order = get_object_or_404(Order, pk=order_id)
 
-        # Uloží technickou zprávu navázanou na zakázku z URL a přihlášeného vrtmistra
-        return serializer.save(
-            order=order,
-            driller=self.request.user
-        )
+        return serializer.save(order=order)

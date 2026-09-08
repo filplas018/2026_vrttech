@@ -14,6 +14,8 @@ import {
   CalendarDays,
   Check,
   X,
+  ChevronLeft,
+  ChevronRight,
   Building2,
   FileImage,
   FilePlus2,
@@ -124,6 +126,8 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   const [reportForm, setReportForm] = useState({
     depthMeters: '',
     technicalSpecifications: '',
+    driller: '',
+    filledAt: '',
     alertDriller: true,
   });
   const [document, setDocument] = useState<File | null>(null);
@@ -131,6 +135,13 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   const [gallery, setGallery] = useState({ name: '', galleryId: '', image: null as File | null });
   const [lightboxPhoto, setLightboxPhoto] = useState<GalleryPhoto | null>(null);
   const selectedGallery = allGalleries?.find((item) => String(item.id) === gallery.galleryId);
+  const navigatePhoto = (direction: 1 | -1) => {
+    if (!lightboxPhoto || !selectedGallery || selectedGallery.photos.length < 2) return;
+
+    const currentIndex = selectedGallery.photos.findIndex((photo) => photo.id === lightboxPhoto.id);
+    const nextIndex = (currentIndex + direction + selectedGallery.photos.length) % selectedGallery.photos.length;
+    setLightboxPhoto(selectedGallery.photos[nextIndex]);
+  };
   const [invoice, setInvoice] = useState({
     invoiceNumber: '',
     amount: '',
@@ -145,11 +156,13 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setLightboxPhoto(null);
+      if (event.key === 'ArrowLeft') navigatePhoto(-1);
+      if (event.key === 'ArrowRight') navigatePhoto(1);
     };
 
     globalThis.document.addEventListener('keydown', closeOnEscape);
     return () => globalThis.document.removeEventListener('keydown', closeOnEscape);
-  }, [lightboxPhoto]);
+  }, [lightboxPhoto, selectedGallery]);
   console.log(gallery);
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['projects', projectId] });
@@ -216,6 +229,8 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
       data: {
         depthMeters: reportForm.depthMeters,
         technicalSpecifications: reportForm.technicalSpecifications,
+        driller: reportForm.driller,
+        filledAt: reportForm.filledAt,
         alertDriller: reportForm.alertDriller,
       },
     });
@@ -541,10 +556,33 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
         pending={mutation.isPending}
       >
         {report.data && (
+          <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
           <p className='text-sm text-slate-600 col-span-2'>
             Poslední zpráva: {field(report.data.depthMeters)} m · {field(report.data.filledAt)}
           </p>
+          <p>
+            {field(report.data.technicalSpecifications)}
+          </p>
+          </div>
         )}
+        <Select
+          required
+          value={reportForm.driller}
+          onChange={(e) => setReportForm({ ...reportForm, driller: e.target.value })}
+        >
+          <option value=''>Vyberte vrtmistra</option>
+          {(allUsers ?? []).map((user) => (
+            <option key={user.id} value={String(user.id)}>
+              {user.firstName} {user.lastName} ({user.email})
+            </option>
+          ))}
+        </Select>
+        <Input
+          required
+          type='datetime-local'
+          value={reportForm.filledAt}
+          onChange={(e) => setReportForm({ ...reportForm, filledAt: e.target.value })}
+        />
         <Input
           required
           type='number'
@@ -711,6 +749,26 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
                 alt={`Fotografie ${lightboxPhoto.id}`}
                 className='max-h-[85vh] max-w-full rounded object-contain'
               />
+              {selectedGallery && selectedGallery.photos.length > 1 && (
+                <>
+                  <button
+                    type='button'
+                    className='absolute left-3 top-1/2 grid size-10 -translate-y-1/2 place-content-center rounded-full bg-black/70 text-white hover:bg-black'
+                    onClick={() => navigatePhoto(-1)}
+                    aria-label='Předchozí fotografie'
+                  >
+                    <ChevronLeft className='size-6' />
+                  </button>
+                  <button
+                    type='button'
+                    className='absolute right-3 top-1/2 grid size-10 -translate-y-1/2 place-content-center rounded-full bg-black/70 text-white hover:bg-black'
+                    onClick={() => navigatePhoto(1)}
+                    aria-label='Další fotografie'
+                  >
+                    <ChevronRight className='size-6' />
+                  </button>
+                </>
+              )}
               <button
                 type='button'
                 className='absolute right-2 top-2 rounded-full bg-black/70 w-6 h-6 grid place-content-center p-1 text-xl leading-none text-white hover:bg-black'
