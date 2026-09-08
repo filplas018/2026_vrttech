@@ -3,7 +3,6 @@ import { LoginPage, RegisterPage } from '@/pages';
 import { AuthLayout, PageLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
 import { HomePage } from '@/pages/HomePage';
-import { ProjectsPage } from '@/pages';
 
 export const router = createBrowserRouter([
   // Protected routes
@@ -19,11 +18,7 @@ export const router = createBrowserRouter([
           element: <HomePage />,
           handle: { title: 'Vítejte na VRT domovské stránce' },
         },
-        {
-          path: 'projects',
-          element: <ProjectsPage />,
-          handle: { title: 'Projekty' },
-        },
+       
       ],
     },
   ],
