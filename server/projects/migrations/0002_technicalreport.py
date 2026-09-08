@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
-#radek
+#radek1
 class Migration(migrations.Migration):
 
     dependencies = [
