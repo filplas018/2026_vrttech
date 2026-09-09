@@ -21,20 +21,23 @@ export const router = createBrowserRouter([
           {
             path: '',
             element: <ProjectsPage />,
-                      handle: { title: 'Vítejte na VRT domovské stránce' },
+            handle: { title: 'Vítejte na VRT domovské stránce' },
 
           },
           {
             path: 'projects',
             element: <ProjectsPage />,
+            handle: { title: 'Projekty' },
           },
           {
             path: 'projects/:id',
             element: <ProjectDetailPage />,
+            handle: { title: 'Projekt: ID' },
           },
           {
             path: 'users/settings',
             element: <UsersSettingsPage />,
+            handle: { title: 'Uživatelé' },
           },
         ],
       },

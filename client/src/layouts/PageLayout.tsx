@@ -9,7 +9,7 @@ import {
   UsersRound,
 } from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Link, Outlet, useMatches, NavLink } from 'react-router';
+import { Link, Outlet, useMatches, NavLink, useSearchParams, useLocation } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
 import { useState } from 'react';
@@ -28,6 +28,18 @@ export const PageLayout = () => {
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const orderType = searchParams.get('orderType');
+
+  const isProjectsList = location.pathname === '/projects';
+
+  //nav active barva
+  const navCls = (active: boolean) =>
+    `flex items-center gap-2 p-2 rounded-md ${
+      active ? 'bg-brand text-white' : 'hover:bg-slate-100'
+  }`;
+  
   //nadpis
   const matches = useMatches();
   const currentTitle = (matches.at(-1)?.handle as { title?: string } | undefined)?.title ?? 'VRT-TECH';
@@ -81,33 +93,21 @@ export const PageLayout = () => {
               <NavLink
                 to='/projects'
                 end
-                className={({ isActive }) =>
-                  `flex items-center gap-2 p-2 rounded-md ${
-                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
-                  }`
-                }
+                className={navCls(isProjectsList && !orderType)}
               >
                 <ChartBarStacked />
                 Přehled
               </NavLink>
               <NavLink
                 to='/projects?orderType=VRTANA_STUDNA'
-                className={({ isActive }) =>
-                  `flex items-center gap-2 p-2 rounded-md ${
-                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
-                  }`
-                }
+                className={navCls(isProjectsList && orderType === 'VRTANA_STUDNA')}
               >
                 <WavesArrowDown />
                 Vrtané studny
               </NavLink>
               <NavLink
                 to='/projects?orderType=GEOTERMALNI'
-                className={({ isActive }) =>
-                  `flex items-center gap-2 p-2 rounded-md ${
-                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
-                  }`
-                }
+                className={navCls(isProjectsList && orderType === 'GEOTERMALNI')}
               >
                 <ZodiacAquarius />
                 Geotermální vrty
@@ -115,12 +115,7 @@ export const PageLayout = () => {
              
               <NavLink
                 to='/users/settings'
-                className={({ isActive }) =>
-                  `flex items-center gap-2 p-2 rounded-md ${
-                    isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
-                  }`
-                }
-                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+                className={({ isActive }) => navCls(isActive)}
               >
                 <UsersRound />
                 Uživatelé
