@@ -1,22 +1,68 @@
+name: vrttech-prod
+
 services:
   web:
+    container_name: vrttech_web
     build:
+      context: ../server
+      dockerfile: Dockerfile
       target: production
     restart: always
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - app-network
+      - proxy-net
 
   client:
+    container_name: vrttech_client
     build:
+      context: ../client
+      dockerfile: Dockerfile
       target: production
     restart: always
-    ports:
-      - "80:80"
-
-  caddy:
-    volumes:
-      - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
+    networks:
+      - app-network
+      - proxy-net
 
   db:
+    image: postgres:18.3-alpine
+    container_name: vrttech_db
     restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
+    image: redis:alpine
+    container_name: vrttech_redis
     restart: always
+    expose:
+      - "6379"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
+  proxy-net:
+    external: true
