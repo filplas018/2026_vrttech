@@ -1,15 +1,15 @@
-name: chat-app
+name: vrttech-dev
 
 services:
   web:
     image: django-chat-app
-    container_name: django-chat-app
+    container_name: vrttech_web
     build:
       context: ../server
       dockerfile: Dockerfile
-      target: development  # Explicitně řekne Dockeru, že má použít dev fázi
+      target: development
     volumes:
-      - ../server:/app     # Propojí lokální kódy s kontejnerem
+      - ../server:/app
     env_file:
       - .env
     depends_on:
@@ -17,37 +17,30 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    networks:
+      - app-network
+      - proxy-net
 
   client:
     image: react-chat-app
-    container_name: react-chat-app
+    container_name: vrttech_client
     build:
       context: ../client
       dockerfile: Dockerfile
       target: development
+    
     volumes:
       - ../client:/app
       - client_node_modules:/app/node_modules
-
-  caddy:
-    image: caddy:2-alpine
-    container_name: caddy
-    depends_on:
-      - web
-      - client
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile.dev:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
+    networks:
+      - app-network
+      - proxy-net
 
   db:
     image: postgres:18.3-alpine
-    container_name: postgres
+    container_name: vrttech_db
     ports:
-      - "5433:5432"
+      - "5434:5432" # Změněno na 5434 pro zabránění kolize s KNS databází (5433)
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -61,15 +54,23 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+    networks:
+      - app-network
 
   redis:
     image: redis:alpine
-    container_name: redis
+    container_name: vrttech_redis
     expose:
       - "6379"
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
   client_node_modules:
-  caddy_data:
-  caddy_config:
+
+networks:
+  app-network:
+    driver: bridge
+  proxy-net:
+    external: true
