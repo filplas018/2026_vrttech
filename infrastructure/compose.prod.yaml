@@ -26,6 +26,8 @@ services:
       dockerfile: Dockerfile
       #target: production
     restart: always
+    depends_on:
+      - web
     networks:
       - app-network
       - proxy-net
