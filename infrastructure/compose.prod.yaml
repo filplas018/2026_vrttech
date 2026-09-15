@@ -6,7 +6,7 @@ services:
     build:
       context: ../server
       dockerfile: Dockerfile
-      target: production
+      #target: production
     restart: always
     env_file:
       - .env
