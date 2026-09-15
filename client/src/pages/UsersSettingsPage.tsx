@@ -120,7 +120,7 @@ export const UsersSettingsPage = () => {
   }
 
   return (
-    <main className='min-h-full bg-slate-50/70 p-4'>
+    <main className='min-h-full  p-4'>
       <section className='mx-auto grid max-w-6xl gap-6 lg:grid-cols-2'>
         <div className='rounded-xl border border-slate-200 bg-white p-6 shadow-sm'>
         <div className='mb-6'>

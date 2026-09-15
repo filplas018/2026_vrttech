@@ -320,23 +320,22 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   };
 
   return (
-    <section className='grid grid-cols-1 md:grid-cols-2 gap-2 pb-18 bg-slate-50/70 p-4'>
+    <section className='grid grid-cols-1 md:grid-cols-2 gap-6 pb-18 p-4'>
       <ActionForm
-        className='grid grid-cols-2 gap-2'
         icon={<MountainSnow className='size-6 text-brand-secondary' />}
         title='Terénní návštěvy projektu'
         onSubmit={submitVisit}
         pending={mutation.isPending}
+        variant='white'
       >
-        <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
-          <div className='flex items-center gap-2'>
-            <CalendarDays className='size-6 text-brand-secondary' />
+        <div className='col-span-2 border-b border-slate-100 pb-4'>
+          <div className='flex items-center gap-2 border-b border-slate-200 pb-2 mb-4'>
             <h4 className='font-semibold'>Naplánované návštěvy</h4>
           </div>
           {(visits.data ?? []).map((item) => (
             <div
               key={String(item.id)}
-              className='border-b-2 pb-2 border-gray-500 mt-2 text-sm text-slate-600 flex justify-between items-start'
+              className='border-b border-slate-100 py-3 last:border-b-0 last:pb-0 text-sm text-slate-600 flex justify-between items-start'
             >
               <div className='grid grid-cols-2 gap-2'>
                 <span className='flex gap-2 items-center'>
@@ -364,7 +363,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
                   )}
                 </span>
               </div>
-              <div className='flex flex-wrap items-center gap-2'>
+              <div className='flex flex-wrap items-center gap-2 justify-end'>
                 {item.conditions?.cuttingsDisposal && (
                   <span className='rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800'>
                     Likvidace vývrtku: {item.conditions.cuttingsDisposal}
@@ -428,24 +427,23 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
       </ActionForm>
       <ActionForm
         icon={<Users className='size-6 text-brand-secondary' />}
-        className='grid grid-cols-2 gap-2'
         title='Kontakty'
         onSubmit={submitContact}
         pending={mutation.isPending}
+        variant='white'
       >
-        <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
-          <div className='flex items-center gap-2'>
-            <Users className='size-6 text-brand-secondary' />
+        <div className='col-span-2 border-b border-slate-100 pb-4'>
+          <div className='flex items-center gap-2 border-b border-slate-200 pb-2 mb-4'>
             <h4 className='font-semibold'>Přiřazené kontakty</h4>
           </div>
           {(projectContacts ?? []).length > 0 ? (
-            <div className='mt-3 space-y-3'>
+            <div className='mt-3 divide-y divide-slate-100'>
               {(projectContacts ?? []).map((contact) => (
                 <div
                   key={String(contact.id ?? contact.email ?? 'contact')}
-                  className='rounded-lg border border-slate-100 bg-slate-50 p-3 text-sm text-slate-600'
+                  className='py-3 text-sm text-slate-600 first:pt-0'
                 >
-                  <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+                  <div className='flex flex-wrap items-center gap-x-4 gap-y-2 justify-between'>
                     <span className='flex items-center gap-2 font-medium text-slate-800'>
                       <Mail className='size-4 text-brand-secondary' />
                       {field(contact.email)}
@@ -493,15 +491,14 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
       </ActionForm>
 
       <ActionForm
-        className='grid grid-cols-2 gap-2'
         icon={<Wrench className='size-6 text-brand-secondary' />}
         title='Termíny projektu a harmonogram vrtání'
         onSubmit={submitSchedule}
         pending={mutation.isPending}
+        variant='white'
       >
-        <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
-          <div className='flex items-center gap-2'>
-            <HardHat className='size-6 text-brand-secondary' />
+        <div className='col-span-2 border-b border-slate-100 pb-4'>
+          <div className='flex items-center gap-2 border-b border-slate-200 pb-2 mb-4'>
             <h4 className='font-semibold'>Naplánované termíny</h4>
           </div>
           {(schedules.data ?? []).map((item) => (
@@ -550,19 +547,17 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
       </ActionForm>
       <ActionForm
         icon={<FilePlus2 className='size-6 text-brand-secondary' />}
-        className='grid grid-cols-2 gap-2'
         title='Technická zpráva'
         onSubmit={submitReport}
         pending={mutation.isPending}
+        variant='white'
       >
         {report.data && (
           <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
-          <p className='text-sm text-slate-600 col-span-2'>
-            Poslední zpráva: {field(report.data.depthMeters)} m · {field(report.data.filledAt)}
-          </p>
-          <p>
-            {field(report.data.technicalSpecifications)}
-          </p>
+            <p className='text-sm text-slate-600'>
+              Poslední zpráva: {field(report.data.depthMeters)} m · {field(report.data.filledAt)}
+            </p>
+            <p className='mt-1 text-sm text-slate-600'>{field(report.data.technicalSpecifications)}</p>
           </div>
         )}
         <Select
@@ -612,10 +607,10 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
 
       <ActionForm
         icon={<Upload className='size-6 text-brand-secondary' />}
-        className='grid grid-cols-2 gap-2'
         title='Dokumenty'
         onSubmit={submitDocument}
         pending={mutation.isPending}
+        variant='white'
       >
         <Select
           className='col-span-2'
@@ -648,11 +643,11 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
       </ActionForm>
 
       <ActionForm
-        className='grid grid-cols-2 gap-2'
         icon={<FileImage className='size-6 text-brand-secondary' />}
         title='Nová galerie'
         onSubmit={submitGallery}
         pending={mutation.isPending}
+        variant='white'
       >
         <Input
           required
@@ -663,11 +658,12 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
         />
       </ActionForm>
       <ActionForm
-        className='grid grid-cols-2 col-span-2 gap-2'
+        className='col-span-2'
         icon={<FileImage className='size-6 text-brand-secondary' />}
         title='Fotogalerie'
         onSubmit={submitPhoto}
         pending={mutation.isPending}
+        variant='white'
       >
         <Select
           className='col-span-2'
@@ -694,7 +690,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
                   <button
                     key={photo.id}
                     type='button'
-                    className='relative border-2 border-gray-500 h-24 w-24 overflow-hidden rounded-md focus:outline-none focus:ring-2 focus:ring-brand-secondary'
+                    className='relative border border-slate-200 h-24 w-24 overflow-hidden rounded-md focus:outline-none focus:ring-2 focus:ring-brand-secondary'
                     onClick={() => setLightboxPhoto(photo)}
                     aria-label={`Zobrazit fotografii ${photo.id}`}
                   >
@@ -784,13 +780,13 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
 
       <ActionForm
         icon={<WalletCards className='size-6 text-brand-secondary' />}
-        className='grid grid-cols-2 gap-2'
         title='Fakturace'
         onSubmit={submitInvoice}
         pending={mutation.isPending}
+        variant='white'
       >
-        <div className='rounded-lg border border-slate-200 bg-white p-4 text-sm col-span-2'>
-          <p className='font-semibold'>Finance</p>
+        <div className=' col-span-2 mb-4'>
+          <p className='font-semibold mb-2'>Finance</p>
           <p className='mt-2'>
             Fakturace: {field(summary.invoiced)} · Uhrazeno: {field(summary.totalPaid)} · Zbývá:{' '}
             {field(summary.remaining)}
@@ -837,15 +833,14 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
 
       <ActionForm
         icon={<WalletCards className='size-6 text-brand-secondary' />}
-        className='grid grid-cols-2 gap-2'
         title='Nový zjišťovací protokol'
         onSubmit={submitProtocol}
         pending={mutation.isPending}
+        variant='white'
       >
-        <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-4'>
+        <div className='col-span-2 mb-4'>
           <div className='flex items-center gap-2'>
-            <FileText className='size-5 text-brand-secondary' />
-            <h4 className='font-semibold'>Existující protokoly</h4>
+            <h4 className='font-semibold mb-2'>Existující protokoly</h4>
           </div>
           {protocols.length > 0 ? (
             <div className='mt-3 space-y-2'>
