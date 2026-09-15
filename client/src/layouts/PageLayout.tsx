@@ -3,9 +3,7 @@ import {
   LogOut,
   WavesArrowDown,
   ZodiacAquarius,
-  Search,
   ChartBarStacked,
-  ChevronLeft,
   UsersRound,
 } from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
@@ -26,7 +24,7 @@ export const PageLayout = () => {
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
   const logoutMutation = useLogoutMutation();
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen] = useState(false);
 
   const [searchParams] = useSearchParams();
   const location = useLocation();

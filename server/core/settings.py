@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     SECRET_KEY=(str, "insecure-secret-key"),
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1", "[::1]"]),
+    ALLOWED_HOSTS=(list, ["vrttech.localhost","localhost", "127.0.0.1", "[::1]", "www.vrt.filipplass.online", "vrt.filipplass.online"]), #local
     REDIS_URL=(str, "redis://localhost:6379/0"),
     POSTGRES_USER=(str, "user"),
     POSTGRES_PASSWORD=(str, "password"),
@@ -146,7 +146,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 

@@ -225,7 +225,7 @@ export const ProjectDetailPage = () => {
             />
             {workflowLabels.map((label, index) => {
               const step = workflow.find(
-                (item: { stepNumber: number; status?: string }) => item.stepNumber === index + 1,
+                (item) => item.step_number === index + 1,
               );
               const status = step?.status || 'NEZAHAJENO';
               return (
@@ -293,10 +293,9 @@ export const ProjectDetailPage = () => {
               <Metric label='Zbývá' value={summary?.remaining ?? 'Načítám'} />
               
               <Metric label='Faktury' value={finance?.invoices.length ?? 'Načítám'} />
-              <Metric label='Protokoly' value={finance?.inspectionProtocols.length ?? 'Načítám'} />
+              <Metric label='Protokoly' value={finance?.inspection_protocols.length ?? 'Načítám'} />
               
-              <Metric label='Pozastaveno' value={finance?.summary.retentions.released ?? 'Načítám'} />
-              <Metric label='Uvolněno' value={finance?.summary.retentions.unreleased ?? 'Načítám'} />
+              <Metric label='Pozastávky' value={finance?.retentions.length ?? 'Načítám'} />
 
             </dl>
           </div>
@@ -314,7 +313,7 @@ export const ProjectDetailPage = () => {
                 target='_blank'
                 rel='noreferrer'
               >
-                {field(item.fileName)}
+                {field(item.file_name)}
               </a>
               
             ))}
