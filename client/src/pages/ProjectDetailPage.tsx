@@ -102,38 +102,46 @@ export const ProjectDetailPage = () => {
 
   const summary = finance?.summary;
 
+    const doneCount = workflowLabels.reduce((count, _, index) => {
+      const step = workflow.find((item: { stepNumber: number; status?: string }) => item.stepNumber === index + 1);
+      return step?.status === 'SPLNENO' && count === index ? count + 1 : count;
+    }, 0);
+
   return (
     <>
       <ProjectHeader project={project} />
 
-      <form onSubmit={saveProject} className='mx-4 mb-2 rounded-xl border border-slate-200 bg-white p-4'>
-        <div className='mb-4 flex items-center justify-between gap-3'>
-          <h2 className='text-lg font-semibold text-slate-950'>Údaje zakázky</h2>
+      <form onSubmit={saveProject} className='mx-4 mb-12 rounded-xl border border-slate-200 bg-white p-5'>
+        <div className='mb-6 flex items-center justify-between gap-4'>
+          <h2 className='text-lg font-semibold tracking-tight text-slate-950'>Údaje zakázky</h2>
           <Button type='submit' disabled={updateProjectMutation.isPending}>
             <Save className='size-4' />
             {updateProjectMutation.isPending ? 'Ukládám...' : 'Uložit změny'}
           </Button>
         </div>
-        <div className='grid gap-4 md:grid-cols-2 xl:grid-cols-4'>
-          <label className='space-y-2 text-sm font-medium'>
+        <div className='grid gap-5 md:grid-cols-2 xl:grid-cols-4'>
+          <label className='space-y-2 text-sm font-light'>
             Číslo zakázky
             <Input
+              className='text-m font-medium'
               required
               value={form.orderNumber ?? ''}
               onChange={(event) => updateField('orderNumber', event.target.value)}
             />
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Název zakázky
             <Input
+              className='text-m font-medium'
               required
               value={form.name ?? ''}
               onChange={(event) => updateField('name', event.target.value)}
             />
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Typ zakázky
             <Select
+              className='text-m font-medium'
               value={form.orderType ?? ''}
               onChange={(event) => updateField('orderType', event.target.value)}
             >
@@ -142,9 +150,10 @@ export const ProjectDetailPage = () => {
               ))}
             </Select>
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Stav zakázky
             <Select
+              className='text-m font-medium'
               value={form.orderState ?? ''}
               onChange={(event) => updateField('orderState', event.target.value)}
             >
@@ -153,9 +162,10 @@ export const ProjectDetailPage = () => {
               ))}
             </Select>
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Zájem zákazníka
             <Select
+              className='text-m font-medium'
               value={form.customerInterest ?? ''}
               onChange={(event) => updateField('customerInterest', event.target.value)}
             >
@@ -164,9 +174,10 @@ export const ProjectDetailPage = () => {
               ))}
             </Select>
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Celkový rozpočet
             <Input
+              className='text-m font-medium'
               required
               type='number'
               min='0'
@@ -175,71 +186,85 @@ export const ProjectDetailPage = () => {
               onChange={(event) => updateField('totalBudget', event.target.value)}
             />
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Záruka od
             <Input
+              className='text-m font-medium'
               type='date'
               value={form.warrantyFrom ?? ''}
               onChange={(event) => updateField('warrantyFrom', event.target.value)}
             />
           </label>
-          <label className='space-y-2 text-sm font-medium'>
+          <label className='space-y-2 text-sm font-light'>
             Záruka do
             <Input
+              className='text-m font-medium'
               type='date'
               value={form.warrantyTo ?? ''}
+              
               onChange={(event) => updateField('warrantyTo', event.target.value)}
             />
           </label>
         </div>
       </form>
 
-      <main className='grid gap-2 xl:grid-cols-3 bg-slate-50/70 pt-0 p-4'>
-        <div className='rounded-xl border border-slate-200 bg-white p-4 col-span-3 xl:col-span-2'>
+      <main className='grid gap-2 xl:grid-cols-3 pt-0 p-4 mb-5'>
+
+        <div className='rounded-xl border border-slate-200 bg-white p-6 col-span-3 xl:col-span-2'>
           <h2 className='text-lg font-semibold text-slate-950'>Workflow</h2>
-          <div className='pt-3 space-y-3'>
+          <div className='relative mt-4'>
+            <div className='pointer-events-none absolute top-4 bottom-4 left-3.5 w-px bg-slate-200' />
+            <div
+              className='pointer-events-none absolute top-4 left-3.5 w-px bg-emerald-400'
+              style={{
+                height:
+                  doneCount > 1
+                    ? `calc((100% - 2rem) * ${(doneCount - 1) / (workflowLabels.length - 1)})`
+                    : 0,
+              }}
+            />
             {workflowLabels.map((label, index) => {
               const step = workflow.find(
                 (item: { stepNumber: number; status?: string }) => item.stepNumber === index + 1,
               );
               const status = step?.status || 'NEZAHAJENO';
               return (
-                <div
-                  key={label}
-                  className='flex items-center gap-3 rounded-lg border border-slate-100 p-3'
-                >
+                <div key={label} className='relative flex items-center gap-3 py-3.5'>
                   <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${status === 'SPLNENO' ? 'bg-emerald-100 text-emerald-700' : status === 'PROBIHA' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}`}
+                    className={`relative z-2 flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ring-4 ring-white ${status === 'SPLNENO' ? 'bg-emerald-100 text-emerald-700' : status === 'PROBIHA' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}`}
                   >
                     {index + 1}
                   </span>
-                  <span className='flex-1 text-sm font-medium text-slate-800'>{label}</span>
-                  <span className='text-xs text-slate-500'>
-                    {status === 'SPLNENO'
-                      ? 'Splněno'
-                      : status === 'PROBIHA'
-                        ? 'Probíhá'
-                        : 'Nezahájeno'}
-                  </span>
-                  <Button
-                    type='button'
-                    size='sm'
-                    variant='outline'
-                    onClick={() =>
-                      submit({
-                        method: 'patch',
-                        url: `/projects/${projectId}/well-workflow/${step?.stepNumber??index + 1}/`,
-                        data: { status: step?.status === 'SPLNENO' ? 'PROBIHA' : 'SPLNENO' },
-                      })
-                    }
-                  >
-                    <Check className='size-4' /> Změnit stav
-                  </Button>
+                  <div className='flex flex-1 items-center gap-3 border-b border-slate-100 pb-3.5 last:border-b-0 last:pb-0'>
+                    <span className='flex-1 text-sm font-medium text-slate-800'>{label}</span>
+                    <span className='text-xs text-slate-500'>
+                      {status === 'SPLNENO'
+                        ? 'Splněno'
+                        : status === 'PROBIHA'
+                          ? 'Probíhá'
+                          : 'Nezahájeno'}
+                    </span>
+                    <Button
+                      type='button'
+                      size='sm'
+                      variant='outline'
+                      onClick={() =>
+                        submit({
+                          method: 'patch',
+                          url: `/projects/${projectId}/well-workflow/${step?.stepNumber??index + 1}/`,
+                          data: { status: step?.status === 'SPLNENO' ? 'PROBIHA' : 'SPLNENO' },
+                        })
+                      }
+                    >
+                      <Check className='size-4' /> Změnit stav
+                    </Button>
+                  </div>
                 </div>
               );
             })}
           </div>
         </div>
+
         <div className='grid grid-cols-3 xl:grid-cols-1 gap-2 col-span-3 xl:col-span-1'>
           <InfoTile
             icon={<WalletCards />}
@@ -256,6 +281,7 @@ export const ProjectDetailPage = () => {
             label='Záruka do'
             value={project.warrantyTo || 'Neuvedeno'}
           />
+          
           <div className='rounded-xl border border-slate-200 bg-white p-5'>
             <div className='flex items-center gap-2'>
               <WalletCards className='size-5 text-brand-secondary' />
@@ -274,6 +300,7 @@ export const ProjectDetailPage = () => {
 
             </dl>
           </div>
+          
           <div className='rounded-xl border border-slate-200 bg-white p-5 col-span-2 xl:col-span-1 overflow-y-auto min-h-max'>
             <div className='flex items-center gap-2'>
               <FileText className='size-5 text-brand-secondary' />
