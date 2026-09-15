@@ -24,7 +24,7 @@ services:
     build:
       context: ../client
       dockerfile: Dockerfile
-      target: production
+      #target: production
     restart: always
     networks:
       - app-network
