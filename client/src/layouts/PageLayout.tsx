@@ -3,13 +3,11 @@ import {
   LogOut,
   WavesArrowDown,
   ZodiacAquarius,
-  Search,
   ChartBarStacked,
-  ChevronLeft,
   UsersRound,
 } from 'lucide-react';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Link, Outlet, useMatches, NavLink } from 'react-router';
+
+import { Outlet, useMatches, NavLink } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
 import { useState } from 'react';
@@ -26,7 +24,7 @@ export const PageLayout = () => {
   const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(' ');
   const logoutMutation = useLogoutMutation();
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen] = useState(false);
 
   //nadpis
   const matches = useMatches();
@@ -120,7 +118,7 @@ export const PageLayout = () => {
                     isActive ? 'bg-brand text-white' : 'hover:bg-slate-100'
                   }`
                 }
-                className='flex items-center gap-2 p-2 rounded-md hover:bg-slate-100'
+                
               >
                 <UsersRound />
                 Uživatelé

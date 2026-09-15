@@ -27,7 +27,7 @@ export const handleFormErrors = <T extends FieldValues>(
     Object.keys(apiError.details).forEach((field) => {
       const fieldErrors = apiError.details?.[field];
       // Safely grab the first error object in the array
-      const firstError = fieldErrors[0];
+      const firstError = fieldErrors?.[0];
 
       if (firstError) {
         // The 3-Step Matrix Lookup
