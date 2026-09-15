@@ -6,10 +6,13 @@ services:
     build:
       context: ../server
       dockerfile: Dockerfile
-      #target: production
     restart: always
     env_file:
       - .env
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             daphne -b 0.0.0.0 -p 8000 vrttech.asgi:application"
     depends_on:
       db:
         condition: service_healthy
@@ -24,7 +27,6 @@ services:
     build:
       context: ../client
       dockerfile: Dockerfile
-      #target: production
     restart: always
     depends_on:
       - web
