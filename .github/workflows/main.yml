@@ -20,7 +20,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: deployer
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "client/,backend/,infrastructure/"
+          source: "client/,server/,infrastructure/"
           target: "/home/deployer/2026_vrttech"
           overwrite: true
 
