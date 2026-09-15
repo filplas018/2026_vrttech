@@ -3,7 +3,7 @@ name: Deploy 2026_vrttech to Hetzner VPS
 on:
   push:
     branches:
-      - main  # Spustí se automaticky po pushnutí do věve main
+      - main  # Spustí se automaticky po pushnutí do větve main
 
 jobs:
   deploy:
@@ -33,14 +33,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/deployer/2026_vrttech
-            
-            # Vytvoření/přepsání souboru .env v kořeni projektu
-            cat << 'EOF' > .env
+
+            # Zápis .env do infrastructure/ a vytvoření kopie v kořeni projektu
+            mkdir -p infrastructure
+            cat << 'EOF' > infrastructure/.env
             ${{ secrets.PRODUCTION_ENV }}
             EOF
-            
-            # Plynulý rebuild a restart s odkazem na produkční compose v infrastructure/
-            docker compose -f infrastructure/compose.prod.yaml --env-file .env up -d --build --remove-orphans
-            
+            cp infrastructure/.env .env
+
+            # Plynulý rebuild a restart s odkazem na produkční compose a správný .env
+            docker compose -f infrastructure/compose.prod.yaml --env-file infrastructure/.env up -d --build --remove-orphans
+
             # Pročištění neaktivních Docker imagí pro úsporu disku
             docker image prune -f
