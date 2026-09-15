@@ -40,7 +40,7 @@ services:
     image: postgres:18.3-alpine
     container_name: vrttech_db
     ports:
-    - "127.0.0.1:5434:5432"  # <--- TOTO TADY CHYBĚLO
+      - "5434:5432" # Změněno na 5434 pro zabránění kolize s KNS databází (5433)
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
