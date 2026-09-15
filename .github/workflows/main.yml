@@ -1,0 +1,46 @@
+name: Deploy 2026_vrttech to Hetzner VPS
+
+on:
+  push:
+    branches:
+      - main  # Spustí se automaticky po pushnutí do věve main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Krok: Stáhne kód z repozitáře
+      - name: Checkout kódu z repozitáře
+        uses: actions/checkout@v4
+
+      # 2. Krok: Zkopíruje potřebné složky na server
+      - name: Kopírování souborů na server (SCP)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: deployer
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "client/,backend/,infrastructure/"
+          target: "/home/deployer/2026_vrttech"
+          overwrite: true
+
+      # 3. Krok: Přihlášení přes SSH, zápis .env a plynulý rebuild
+      - name: Spuštění aplikace na serveru (SSH)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: deployer
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/deployer/2026_vrttech
+            
+            # Vytvoření/přepsání souboru .env v kořeni projektu
+            cat << 'EOF' > .env
+            ${{ secrets.PRODUCTION_ENV }}
+            EOF
+            
+            # Plynulý rebuild a restart s odkazem na produkční compose v infrastructure/
+            docker compose -f infrastructure/compose.prod.yaml --env-file .env up -d --build --remove-orphans
+            
+            # Pročištění neaktivních Docker imagí pro úsporu disku
+            docker image prune -f
