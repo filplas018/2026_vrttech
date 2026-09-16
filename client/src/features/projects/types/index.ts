@@ -54,6 +54,8 @@ export interface CreateProjectPayload {
   orderState?: ProjectState;
   customerInterest?: CustomerInterest;
   totalBudget?: string;
+  warrantyFrom?: string;
+  warrantyTo?: string;
 }
 
 export type UpdateProjectPayload = Partial<

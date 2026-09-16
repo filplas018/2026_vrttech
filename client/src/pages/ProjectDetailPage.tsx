@@ -292,10 +292,10 @@ export const ProjectDetailPage = () => {
               <Metric label='Uhrazeno' value={summary?.totalPaid ?? 'Načítám'} />
               <Metric label='Zbývá' value={summary?.remaining ?? 'Načítám'} />
               
-              <Metric label='Faktury' value={finance?.invoices.length ?? 'Načítám'} />
-              <Metric label='Protokoly' value={finance?.inspection_protocols.length ?? 'Načítám'} />
+              <Metric label='Faktury' value={finance?.invoices?.length ?? 'Načítám'} />
+              <Metric label='Protokoly' value={finance?.inspection_protocols?.length ?? 'Načítám'} />
               
-              <Metric label='Pozastávky' value={finance?.retentions.length ?? 'Načítám'} />
+              <Metric label='Pozastávky' value={finance?.retentions?.length ?? 'Načítám'} />
 
             </dl>
           </div>
@@ -303,7 +303,7 @@ export const ProjectDetailPage = () => {
           <div className='rounded-xl border border-slate-200 bg-white p-5 col-span-2 xl:col-span-1 overflow-y-auto min-h-max'>
             <div className='flex items-center gap-2'>
               <FileText className='size-5 text-brand-secondary' />
-              <h2 className='font-semibold'>Dokumenty projektu ({documents.length})</h2>
+              <h2 className='font-semibold'>Dokumenty projektu ({documents?.length})</h2>
             </div>
             {(documents ?? []).map((item) => (
               <a

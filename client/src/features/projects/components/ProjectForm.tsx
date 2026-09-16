@@ -11,7 +11,15 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { useCreateProjectMutation } from '@/features/projects/hooks';
-import type { CreateProjectPayload, ProjectType } from '@/features/projects/types';
+import {
+  customerInterestLabels,
+  projectStateLabels,
+  projectTypeLabels,
+  type CreateProjectPayload,
+  type CustomerInterest,
+  type ProjectState,
+  type ProjectType,
+} from '@/features/projects/types';
 
 interface ProjectFormProps {
   open: boolean;
@@ -22,7 +30,11 @@ const initialForm: CreateProjectPayload = {
   orderNumber: '',
   name: '',
   orderType: 'GEOTERMALNI',
+  orderState: 'POPTAVKA',
+  customerInterest: 'CEKA_SE',
   totalBudget: '',
+  warrantyFrom: '',
+  warrantyTo: '',
 };
 
 export const ProjectForm = ({ open, onOpenChange }: ProjectFormProps) => {
@@ -86,9 +98,35 @@ export const ProjectForm = ({ open, onOpenChange }: ProjectFormProps) => {
               onChange={(event) => updateField('orderType', event.target.value as ProjectType)}
               className='h-8 rounded-lg border border-input bg-background px-2.5 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
             >
-              <option value='GEOTERMALNI'>Geotermální vrt</option>
-              <option value='VRTANA_STUDNA'>Vrtaná studna</option>
-              <option value='OBOJI'>Obojí</option>
+              {Object.entries(projectTypeLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
+          <div className='flex flex-col gap-2'>
+            <label htmlFor='orderState' className='text-sm font-medium'>Stav zakázky</label>
+            <select
+              id='orderState'
+              value={form.orderState}
+              onChange={(event) => updateField('orderState', event.target.value as ProjectState)}
+              className='h-8 rounded-lg border border-input bg-background px-2.5 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
+            >
+              {Object.entries(projectStateLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
+          <div className='flex flex-col gap-2'>
+            <label htmlFor='customerInterest' className='text-sm font-medium'>Zájem zákazníka</label>
+            <select
+              id='customerInterest'
+              value={form.customerInterest}
+              onChange={(event) => updateField('customerInterest', event.target.value as CustomerInterest)}
+              className='h-8 rounded-lg border border-input bg-background px-2.5 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50'
+            >
+              {Object.entries(customerInterestLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
             </select>
           </div>
           <div className='flex flex-col gap-2'>
@@ -101,6 +139,24 @@ export const ProjectForm = ({ open, onOpenChange }: ProjectFormProps) => {
               value={form.totalBudget}
               onChange={(event) => updateField('totalBudget', event.target.value)}
               placeholder='Kč'
+            />
+          </div>
+          <div className='flex flex-col gap-2'>
+            <label htmlFor='warrantyFrom' className='text-sm font-medium'>Záruka od</label>
+            <Input
+              id='warrantyFrom'
+              type='date'
+              value={form.warrantyFrom}
+              onChange={(event) => updateField('warrantyFrom', event.target.value)}
+            />
+          </div>
+          <div className='flex flex-col gap-2'>
+            <label htmlFor='warrantyTo' className='text-sm font-medium'>Záruka do</label>
+            <Input
+              id='warrantyTo'
+              type='date'
+              value={form.warrantyTo}
+              onChange={(event) => updateField('warrantyTo', event.target.value)}
             />
           </div>
           <SheetFooter className='px-0'>
