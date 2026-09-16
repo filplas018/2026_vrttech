@@ -219,7 +219,7 @@ export const ProjectDetailPage = () => {
               style={{
                 height:
                   doneCount > 1
-                    ? `calc((100% - 2rem) * ${(doneCount - 1) / (workflowLabels.length - 1)})`
+                    ? `calc((100% - 2rem) * ${(doneCount - 1) / (workflowLabels?.length ?? 0 - 1)})`
                     : 0,
               }}
             />
@@ -303,7 +303,7 @@ export const ProjectDetailPage = () => {
           <div className='rounded-xl border border-slate-200 bg-white p-5 col-span-2 xl:col-span-1 overflow-y-auto min-h-max'>
             <div className='flex items-center gap-2'>
               <FileText className='size-5 text-brand-secondary' />
-              <h2 className='font-semibold'>Dokumenty projektu ({documents?.length})</h2>
+              <h2 className='font-semibold'>Dokumenty projektu ({documents?.length ?? 0})</h2>
             </div>
             {(documents ?? []).map((item) => (
               <a
