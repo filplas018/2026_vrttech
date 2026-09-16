@@ -11,7 +11,6 @@ import { Button, Input, Select, Label } from '../../../components/ui/';
 import { toast } from 'sonner';
 import { OperationsBottomPanel } from './OperationsBottomPanel';
 import {
-  CalendarDays,
   Check,
   X,
   ChevronLeft,
@@ -19,7 +18,6 @@ import {
   Building2,
   FileImage,
   FilePlus2,
-  HardHat,
   Mail,
   MountainSnow,
   Send,
