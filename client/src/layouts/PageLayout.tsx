@@ -6,8 +6,7 @@ import {
   ChartBarStacked,
   UsersRound,
 } from 'lucide-react';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Link, Outlet, useMatches, NavLink, useSearchParams, useLocation } from 'react-router';
+import { Outlet, useMatches, NavLink, useSearchParams, useLocation } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
 import { useState } from 'react';

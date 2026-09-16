@@ -103,7 +103,7 @@ export const ProjectDetailPage = () => {
   const summary = finance?.summary;
 
     const doneCount = workflowLabels.reduce((count, _, index) => {
-      const step = workflow.find((item: { stepNumber: number; status?: string }) => item.stepNumber === index + 1);
+      const step = workflow.find((item) => item.step_number === index + 1);
       return step?.status === 'SPLNENO' && count === index ? count + 1 : count;
     }, 0);
 
@@ -251,7 +251,7 @@ export const ProjectDetailPage = () => {
                       onClick={() =>
                         submit({
                           method: 'patch',
-                          url: `/projects/${projectId}/well-workflow/${step?.stepNumber??index + 1}/`,
+                          url: `/projects/${projectId}/well-workflow/${step?.step_number ?? index + 1}/`,
                           data: { status: step?.status === 'SPLNENO' ? 'PROBIHA' : 'SPLNENO' },
                         })
                       }
