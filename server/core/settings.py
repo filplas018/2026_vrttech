@@ -17,11 +17,17 @@ env = environ.Env(
     POSTGRES_PASSWORD=(str, "password"),
     POSTGRES_DB=(str, "database"),
     POSTGRES_HOST=(str, "localhost"),
+    CSRF_TRUSTED_ORIGINS=(list, [
+        "https://vrttech.localhost",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]),
 )
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 
 REDIS_URL = env("REDIS_URL")
 
