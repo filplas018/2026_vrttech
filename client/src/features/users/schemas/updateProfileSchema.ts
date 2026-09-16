@@ -18,7 +18,7 @@ export const updateProfileSchema = z.object({
         // Splits string into visual "graphemes" (single symbols)
         const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
         const segments = Array.from(segmenter.segment(val));
-        return segments.length === 1;
+        return segments?.length === 1;
       },
       {
         message: 'Must be exactly one emoji',

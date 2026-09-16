@@ -134,10 +134,10 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   const [lightboxPhoto, setLightboxPhoto] = useState<GalleryPhoto | null>(null);
   const selectedGallery = allGalleries?.find((item) => String(item.id) === gallery.galleryId);
   const navigatePhoto = (direction: 1 | -1) => {
-    if (!lightboxPhoto || !selectedGallery || selectedGallery.photos.length < 2) return;
+    if (!lightboxPhoto || !selectedGallery || selectedGallery.photos?.length < 2) return;
 
     const currentIndex = selectedGallery.photos.findIndex((photo) => photo.id === lightboxPhoto.id);
-    const nextIndex = (currentIndex + direction + selectedGallery.photos.length) % selectedGallery.photos.length;
+    const nextIndex = (currentIndex + direction + selectedGallery.photos?.length) % selectedGallery.photos?.length;
     setLightboxPhoto(selectedGallery.photos[nextIndex]);
   };
   const [invoice, setInvoice] = useState({
@@ -434,7 +434,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
           <div className='flex items-center gap-2 border-b border-slate-200 pb-2 mb-4'>
             <h4 className='font-semibold'>Přiřazené kontakty</h4>
           </div>
-          {(projectContacts ?? []).length > 0 ? (
+          {(projectContacts ?? [])?.length > 0 ? (
             <div className='mt-3 divide-y divide-slate-100'>
               {(projectContacts ?? []).map((contact) => (
                 <div
@@ -680,9 +680,9 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
         {selectedGallery && (
           <div className='col-span-2 rounded-lg border border-slate-200 bg-white p-3'>
             <p className='mb-2 text-sm font-medium text-slate-700'>
-              Fotografie v galerii ({selectedGallery.photos.length})
+              Fotografie v galerii ({selectedGallery.photos?.length})
             </p>
-            {selectedGallery.photos.length > 0 ? (
+            {selectedGallery.photos?.length > 0 ? (
               <div className='flex flex-wrap items-center gap-2'>
                 {selectedGallery.photos.map((photo) => (
                   <button
@@ -743,7 +743,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
                 alt={`Fotografie ${lightboxPhoto.id}`}
                 className='max-h-[85vh] max-w-full rounded object-contain'
               />
-              {selectedGallery && selectedGallery.photos.length > 1 && (
+              {selectedGallery && selectedGallery.photos?.length > 1 && (
                 <>
                   <button
                     type='button'
@@ -790,7 +790,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
             {field(summary.remaining)}
           </p>
           <p className='mt-2 text-slate-500'>
-            {invoices.length} faktur · {protocols.length} protokolů · {retentions.length} pozastávek
+            {invoices?.length} faktur · {protocols?.length} protokolů · {retentions?.length} pozastávek
           </p>
         </div>
         <Input
@@ -840,7 +840,7 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
           <div className='flex items-center gap-2'>
             <h4 className='font-semibold mb-2'>Existující protokoly</h4>
           </div>
-          {protocols.length > 0 ? (
+          {protocols?.length > 0 ? (
             <div className='mt-3 space-y-2'>
               {protocols.map((item) => (
                 <div
