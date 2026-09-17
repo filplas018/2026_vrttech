@@ -1,5 +1,5 @@
 import { Button } from '@/components';
-import { LogOut, WavesArrowDown, ZodiacAquarius, ChartBarStacked, UsersRound } from 'lucide-react';
+import { LogOut, WavesArrowDown, ZodiacAquarius, ChartBarStacked, UsersRound, ContactRound as Contact } from 'lucide-react';
 import { Outlet, useMatches, NavLink, useSearchParams, useLocation } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 
@@ -102,7 +102,7 @@ export const PageLayout = () => {
                 Uživatelé
               </NavLink>
               <NavLink to='/contacts/settings' className={({ isActive }) => navCls(isActive)}>
-                <UsersRound />
+                <Contact />
                 Kontakty
               </NavLink>
             </li>
