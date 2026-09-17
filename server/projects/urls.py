@@ -35,6 +35,9 @@ from projects.views.projects.get_project import GetProjectAPIView
 from projects.views.projects.update_project import UpdateProjectAPIView
 from projects.views.projects.assign_contact import AssignContactAPIView
 from projects.views.projects.list_project_contacts import ListProjectContactsAPIView
+from projects.views.projects.create_contact import CreateContactAPIView
+from projects.views.projects.update_contact import UpdateContactAPIView
+
 
 
 # 2. Visits
@@ -83,6 +86,8 @@ urlpatterns = [
     path('projects/<int:pk>/', route_by_method(get_view=GetProjectAPIView, patch_view=UpdateProjectAPIView), name='projects-detail'),
     path('projects/<int:pk>/assign-contact/', AssignContactAPIView.as_view(), name='projects-assign-contact'),
     path('projects/<int:pk>/contacts/', ListProjectContactsAPIView.as_view(), name='projects-contacts'),
+    path('projects/contacts/create/', CreateContactAPIView.as_view(), name='projects-create-contact'),
+    path('projects/contacts/<int:id>/update/', UpdateContactAPIView.as_view(), name='projects-update-contact'),
 
     # === 2. SITE VISITS ===
     path('site-visits/', route_by_method(post_view=CreateVisitAPIView), name='visits-root'),

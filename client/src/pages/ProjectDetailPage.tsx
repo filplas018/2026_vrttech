@@ -103,7 +103,7 @@ export const ProjectDetailPage = () => {
   const summary = finance?.summary;
 
     const doneCount = workflowLabels.reduce((count, _, index) => {
-      const step = workflow.find((item) => item.step_number === index + 1);
+      const step = workflow.find((item) => item.stepNumber === index + 1);
       return step?.status === 'SPLNENO' && count === index ? count + 1 : count;
     }, 0);
 
@@ -225,7 +225,7 @@ export const ProjectDetailPage = () => {
             />
             {workflowLabels.map((label, index) => {
               const step = workflow.find(
-                (item) => item.step_number === index + 1,
+                (item) => item.stepNumber === index + 1,
               );
               const status = step?.status || 'NEZAHAJENO';
               return (
@@ -251,7 +251,7 @@ export const ProjectDetailPage = () => {
                       onClick={() =>
                         submit({
                           method: 'patch',
-                          url: `/projects/${projectId}/well-workflow/${step?.step_number ?? index + 1}/`,
+                          url: `/projects/${projectId}/well-workflow/${step?.stepNumber ?? index + 1}/`,
                           data: { status: step?.status === 'SPLNENO' ? 'PROBIHA' : 'SPLNENO' },
                         })
                       }
@@ -293,7 +293,7 @@ export const ProjectDetailPage = () => {
               <Metric label='Zbývá' value={summary?.remaining ?? 'Načítám'} />
               
               <Metric label='Faktury' value={finance?.invoices?.length ?? 'Načítám'} />
-              <Metric label='Protokoly' value={finance?.inspection_protocols?.length ?? 'Načítám'} />
+              <Metric label='Protokoly' value={finance?.inspectionProtocols?.length ?? 'Načítám'} />
               
               <Metric label='Pozastávky' value={finance?.retentions?.length ?? 'Načítám'} />
 
@@ -313,7 +313,7 @@ export const ProjectDetailPage = () => {
                 target='_blank'
                 rel='noreferrer'
               >
-                {field(item.file_name)}
+                {field(item.fileName)}
               </a>
               
             ))}

@@ -29,6 +29,7 @@ import {
   Pin,
   FileText,
   LockOpen,
+  Phone
 } from 'lucide-react';
 import type { Gallery, GalleryPhoto } from '../../../features/projects/types';
 
@@ -132,6 +133,13 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   const [documentType, setDocumentType] = useState('JINE');
   const [gallery, setGallery] = useState({ name: '', galleryId: '', image: null as File | null });
   const [lightboxPhoto, setLightboxPhoto] = useState<GalleryPhoto | null>(null);
+
+  useEffect(() => {
+    if (!gallery.galleryId && allGalleries?.length) {
+      setGallery((current) => ({ ...current, galleryId: String(allGalleries[0].id) }));
+    }
+  }, [allGalleries, gallery.galleryId]);
+
   const selectedGallery = allGalleries?.find((item) => String(item.id) === gallery.galleryId);
   const navigatePhoto = (direction: 1 | -1) => {
     if (!lightboxPhoto || !selectedGallery || selectedGallery.photos?.length < 2) return;
@@ -257,7 +265,14 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
   }
   function submitPhoto(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!gallery.image || !gallery.galleryId) return;
+    if (!gallery.galleryId) {
+      toast.error('Nejdříve vytvořte nebo vyberte galerii.');
+      return;
+    }
+    if (!gallery.image) {
+      toast.error('Vyberte fotografii k nahrání.');
+      return;
+    }
     const data = new FormData();
     data.append('image', gallery.image);
     submit({
@@ -445,6 +460,10 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
                     <span className='flex items-center gap-2 font-medium text-slate-800'>
                       <Mail className='size-4 text-brand-secondary' />
                       {field(contact.email)}
+                    </span>
+                    <span className='flex items-center gap-2 font-medium text-slate-800'>
+                      <Phone className='size-4 text-brand-secondary' />
+                      {field(contact.phone)}
                     </span>
                     {Boolean(contact.company) && (
                       <span className='flex items-center gap-2'>
@@ -667,9 +686,12 @@ export const OperationsPanel = ({ projectId }: OperationsPanelProps) => {
           className='col-span-2'
           required
           value={gallery.galleryId}
+          disabled={!allGalleries?.length}
           onChange={(e) => setGallery({ ...gallery, galleryId: e.target.value })}
         >
-          <option value=''>Vyberte galerii</option>
+          <option value=''>
+            {allGalleries?.length ? 'Vyberte galerii' : 'Nejdříve vytvořte galerii'}
+          </option>
           {(allGalleries ?? []).map((gallery: Gallery) => (
             <option key={gallery.id} value={String(gallery.id)}>
               {gallery.name}
