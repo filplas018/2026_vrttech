@@ -14,9 +14,9 @@ export const ProjectHeader = ({
 }) => {
   return (
     <header
-      className={`flex justify-between gap-2 border-b border-slate-200 mb-4 px-6 py-4 ${sticky ? 'sticky top-0 bg-white z-10' : ''}`}
+      className={`flex justify-between gap-2 border-b-2 p-4 mb-4 text-brand bg-white/80 ${sticky ? 'sticky top-0 bg-white z-10' : ''}`}
     >
-      <h1 className='text-3xl font-semibold tracking-tight text-slate-950'>
+      <h1 className='text-2xl text-primary font-semibold tracking-tight'>
         <span>{project.name}</span>
       </h1>
 

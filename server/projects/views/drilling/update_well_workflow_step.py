@@ -1,4 +1,3 @@
-from django.http import Http404
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.response import Response
@@ -19,18 +18,10 @@ class UpdateWellWorkflowStepAPIView(BasePatchAPIView):
         project_id = kwargs.get('pk')
         step_number = int(kwargs.get('step_number'))
 
-        step_was_created = False
-        try:
-            step = self.get_object(project_id=project_id, step_number=step_number)
-        except Http404:
-            if not (request.user.is_staff or request.user.is_superuser):
-                raise
-
-            step_was_created = True
-            step_data = request.data.copy()
-            step_data['project'] = project_id
-            step_data['step_number'] = step_number
-            serializer = WellWorkflowStepSerializer(data=step_data)
+        step, step_was_created = WellWorkflowStep.objects.get_or_create(
+            project_id=project_id,
+            step_number=step_number,
+        )
 
         # User model nema role field; hydrogeologicke kroky proto mohou menit pouze staff.
         if step_number in self.HYDROGEOLOGIST_STEPS:
@@ -40,8 +31,7 @@ class UpdateWellWorkflowStepAPIView(BasePatchAPIView):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
-        if not step_was_created:
-            serializer = WellWorkflowStepSerializer(step, data=request.data, partial=True)
+        serializer = WellWorkflowStepSerializer(step, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
 
         new_status = serializer.validated_data.get('status')

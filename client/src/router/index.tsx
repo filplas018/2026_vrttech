@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import {
   LoginPage,
+  ContactsSettingsPage,
   ProjectDetailPage,
   ProjectsPage,
   RegisterPage,
@@ -32,12 +33,17 @@ export const router = createBrowserRouter([
           {
             path: 'projects/:id',
             element: <ProjectDetailPage />,
-            handle: { title: 'Projekt: ID' },
+            // handle: { },
           },
           {
             path: 'users/settings',
             element: <UsersSettingsPage />,
             handle: { title: 'Uživatelé' },
+          },
+          {
+            path: 'contacts/settings',
+            element: <ContactsSettingsPage />,
+            handle: { title: 'Kontakty' },
           },
         ],
       },
